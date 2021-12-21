@@ -1,0 +1,88 @@
+CREATE OR REPLACE PROCEDURE SP_WSR_SHEET_NAMES(I_LOGGED_EMP_ID   IN NUMBER,
+                                             I_COORPORATE      IN NUMBER,
+                                             I_BU              IN NUMBER,
+                                             I_ISU             IN NUMBER,
+                                             I_FILE_DATE       IN VARCHAR2,
+                                             I_REPORT_NAME      IN VARCHAR2,
+                                             O_COUNT           OUT VARCHAR2,
+                                             O_SHEET_NAMES      OUT SYS_REFCURSOR) IS
+
+                                         
+BEGIN
+  
+INSERT INTO WEEKLY_REPORT_SP_INPUT_LOG
+      VALUES
+        (I_LOGGED_EMP_ID,
+         SYSDATE,
+         'SP_WSR_SHEET_NAMES',
+         I_LOGGED_EMP_ID||'-I_LOGGED_EMP_ID '||I_COORPORATE||' -I_COORPORATE '||I_BU||'-I_BU '||I_ISU||'-I_ISU '||I_FILE_DATE||'-I_FILE_DATE '||I_REPORT_NAME||' -I_REPORT_NAME',
+         '',
+         '',
+         '');
+    
+      COMMIT;
+    
+  IF REPLACE(LOWER(I_REPORT_NAME),' ','') = 'accountwiserevenue' THEN
+     
+     O_COUNT:='3';
+     
+     OPEN O_SHEET_NAMES FOR
+     SELECT 'Summary' FROM DUAL
+     UNION ALL
+     SELECT 'Accountwise Revenue' FROM DUAL
+     UNION ALL
+     SELECT 'Analytics' FROM DUAL;
+     
+   ELSIF REPLACE(LOWER(I_REPORT_NAME),' ','') LIKE 'summarystatus%' THEN
+      
+     O_COUNT:='4';
+     
+     OPEN O_SHEET_NAMES FOR
+     SELECT 'Summary' FROM DUAL
+     UNION ALL
+     SELECT 'Summary Status' FROM DUAL
+     UNION ALL
+     SELECT 'Analytics' FROM DUAL
+     UNION ALL
+     SELECT 'Summary Dashboard' FROM DUAL;
+     
+  ELSIF REPLACE(LOWER(I_REPORT_NAME), ' ', '') = 'accountwisehc' THEN
+      
+      O_COUNT:='3';
+      
+      OPEN O_SHEET_NAMES FOR
+     SELECT 'Summary' FROM DUAL
+     UNION ALL
+     SELECT 'Accountwise HC' FROM DUAL
+     UNION ALL
+     SELECT 'Analytics' FROM DUAL;
+     
+  ELSIF REPLACE(LOWER(I_REPORT_NAME), ' ', '') = 'keydeals' THEN
+    
+      O_COUNT:='3';
+      
+      OPEN O_SHEET_NAMES FOR
+     SELECT 'Summary' FROM DUAL
+     UNION ALL
+     SELECT 'Key Deals' FROM DUAL
+     UNION ALL
+     SELECT 'Analytics' FROM DUAL;
+     
+  ELSIF REPLACE(REPLACE(LOWER(I_REPORT_NAME), ' ', ''), '&', '') = 'pl' THEN
+    
+     O_COUNT:='4';
+      
+     OPEN O_SHEET_NAMES FOR
+     SELECT 'Summary' FROM DUAL
+     UNION ALL
+     SELECT 'P&L' FROM DUAL
+     UNION ALL
+     SELECT 'Accountwise Rev - HC' FROM DUAL
+     UNION ALL
+     SELECT 'Analytics' FROM DUAL;
+   
+   END IF;
+ 
+  
+END SP_WSR_SHEET_NAMES;
+/
